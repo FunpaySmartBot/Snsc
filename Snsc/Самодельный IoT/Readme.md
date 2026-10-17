@@ -50,6 +50,6 @@
 
 ---
 
-## 💻 3. Исходный код прошивки (`[сode.cpp](https://raw.githubusercontent.com/FunpaySmartBot/Snsc/refs/heads/main/Snsc/%D0%A1%D0%B0%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20IoT/code.cpp)`) Который вам понадобится для Arduino IDE
+## 💻 3. Исходный код прошивки: [сode.cpp](https://raw.githubusercontent.com/FunpaySmartBot/Snsc/refs/heads/main/Snsc/%D0%A1%D0%B0%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20IoT/code.cpp) Который вам понадобится для Arduino IDE
 
 Перед компиляцией в Arduino IDE убедитесь, что установлена библиотека **FastLED** и добавлена поддержка плат **ESP32** через Менеджер плат.
