@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' 
+content='width=device-width,
+initial-scale=1.0'>
+<title>IoT Panel v4.3</title>
+<style>
+body{background:#050508;
+color:#e2e2e9;
+font-family:sans-serif;
+text-align:center;
+padding:15px;margin:0;}
+.card{background:#100f16;
+padding:30px 20px;
+border-radius:28px;
+max-width:340px;
+margin:20px auto;
+border:1px solid #3d2f5c;
+box-shadow:0 15px 50px 
+rgba(138,43,226,0.15);}
+h1{color:#b392ff;
+font-size:26px;margin:0;
+font-weight:900;
+text-shadow:0 0 15px 
+rgba(161,124,255,0.4);}
+.p-sub{color:#6c6c7a;
+margin:0 0 20px 0;
+font-size:11px;
+text-transform:uppercase;
+letter-spacing:2px;}
+.status{font-weight:bold;
+padding:15px;
+border-radius:18px;
+margin:20px 0;font-size:14px;
+letter-spacing:1px;
+text-transform:uppercase;}
+.locked{background:
+rgba(38,19,24,0.6);
+color:#ff5577;
+border:1px solid #592432;
+box-shadow:0 0 20px 
+rgba(255,85,119,0.15);}
+.unlocked{background:
+rgba(19,38,27,0.6);
+color:#34d399;
+border:1px solid #245937;
+box-shadow:0 0 20px 
+rgba(52,211,153,0.15);}
+input[type='password']{
+width:80%;padding:15px;
+margin:15px 0;
+border:1px solid #3d355c;
+border-radius:14px;
+background:#060509;
+color:#fff;font-size:18px;
+text-align:center;
+outline:none;}
+button{width:92%;
+padding:16px;margin:10px 0;
+border:none;
+border-radius:16px;
+font-size:15px;
+font-weight:bold;
+text-transform:uppercase;
+cursor:pointer;
+transition:0.2s ease;}
+.btn-main{background:#8a2be2;
+color:#fff;
+box-shadow:0 4px 20px 
+rgba(138,43,226,0.4);}
+.btn-unl{background:#10b981;
+color:#fff;
+box-shadow:0 4px 15px 
+rgba(52,211,153,0.25);}
+.btn-loc{background:#d93856;
+color:#fff;
+box-shadow:0 4px 15px 
+rgba(255,85,119,0.25);}
+.btn-deck{background:#ff7b00;
+color:#fff;
+box-shadow:0 4px 15px 
+rgba(255,123,0,0.25);}
+.btn-action{background:#16141f;
+color:#a0a0ab;
+border:1px solid #2d293d;
+margin-top:20px;}
+.btn-fx{background:#15131c;
+color:#a0a0ab;
+border:1px solid #2d293d;}
+.btn-active{background:
+#a17cff!important;
+color:#050508!important;
+box-shadow:0 0 15px 
+rgba(161,124,255,0.5)!important;}
+label{display:block;
+text-align:left;
+margin:15px 0 5px 15px;
+font-size:11px;
+color:#8f8aae;
+font-weight:700;
+text-transform:uppercase;}
+.rgb-box{background:#09080d;
+padding:15px;
+border-radius:18px;
+border:1px solid #231f33;
+margin-top:10px;}
+input[type='range']{width:92%;
+margin-bottom:12px;
+accent-color:#a17cff;
+background:#15131c;
+height:6px;border-radius:3px;}
+#r-slip{accent-color:#ff4545;}
+#g-slip{accent-color:#34d399;}
+#b-slip{accent-color:#00bfff;}
+.grid{display:flex;
+justify-content:space-between;
+width:92%;margin:0 auto;}
+.grid button{width:31%;
+font-size:11px;
+padding:12px 2px;
+border-radius:12px;}
+hr{border:0;
+border-top:1px solid #2b2640;
+margin:25px 0;}
+button:active{
+transform:scale(0.96);}
+.leds{display:flex;
+justify-content:center;
+gap:6px;margin:15px auto;
+width:90%;background:#030305;
+padding:12px;
+border-radius:14px;
+border:1px solid #231f33;}
+.dot{width:14px;height:14px;
+border-radius:50%;
+background:#8a2be2;
+box-shadow:0 0 12px #8a2be2;
+transition:0.15s;}
+.color-indicator{width:92%;
+height:20px;
+border-radius:10px;
+margin:5px auto 15px auto;
+border:1px solid #2b2640;}
+</style>
+</head>
+<body>
+
+<div class='card'>
+    <h1>🔮 Max Plus Custom(7j6j7)</h1>
+    <div class='p-sub'>
+        IoT System v4.3
+    </div>
+    
+    <div class='leds' id='ledStrip'>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+    </div>
+
+    <!-- ЭКРАН ВХОДА В ПАНЕЛЬ -->
+    <div id='lScreen'>
+        <div class='status locked'>
+            🔒 ДОСТУП ОГРАНИЧЕН
+        </div>
+        <input type='password' 
+        id='pIn' 
+        placeholder='ВВЕДИТЕ ПИН-КОД'>
+        <br>
+        <button class='btn-main' 
+        onclick='tryUnlock()'>
+            🔑 ВОЙТИ
+        </button>
+    </div>
+
+    <!-- ГЛАВНЫЙ ЭКРАН УПРАВЛЕНИЯ -->
+    <div id='cScreen' 
+    style='display:none;'>
+        <div class='status locked' 
+        id='scooterStatus'>
+            🔒 САМОКАТ ЗАБЛОКИРОВАН
+        </div>
+        
+        <button class='btn-unl' 
+        onclick='unlockScooter()'>
+            🔓 РАЗБЛОКИРОВАТЬ
+        </button>
+        <button class='btn-loc' 
+        onclick='lockScooter()'>
+            🔒 ЗАБЛОКИРОВАТЬ
+        </button>
+        
+        <button class='btn-deck' 
+        id='dBtn' 
+        onclick='openDeck()'>
+            🧲 ОТКРЫТЬ ДЕКУ
+        </button>
+        
+        <button class='btn-action' 
+        onclick='logoutPanel()'>
+            🚪 ВЫЙТИ ИЗ ПАНЕЛИ
+        </button>
+        <hr>
+        <h3 style='color:#a17cff;
+        font-size:14px;margin:0;
+        text-transform:uppercase;'>
+            НАСТРОЙКА НЕОНА
+        </h3>
+        
+        <div class='rgb-box'>
+            <div class='color-indicator' 
+            id='cInd'></div>
+            <label id='rLab' 
+            style='color:#ff5555;'>
+                Красный (R): 150
+            </label>
+            <input type='range' 
+            id='r-slip' min='0' 
+            max='255' value='150' 
+            oninput='updRGB()'>
+            
+            <label id='gLab' 
+            style='color:#34d399;'>
+                Зеленый (G): 0
+            </label>
+            <input type='range' 
+            id='g-slip' min='0' 
+            max='255' value='0' 
+            oninput='updRGB()'>
+            
+            <label id='bLab' 
+            style='color:#00bfff;'>
+                Синий (B): 255
+            </label>
+            <input type='range' 
+            id='b-slip' min='0' 
+            max='255' value='255' 
+            oninput='updRGB()'>
+        </div>
+
+        <label id='brightLab'>
+            Общая яркость: 70%
+        </label>
+        <input type='range' 
+        id='bRng' min='10' max='100' 
+        value='70' oninput='updBright()'>
+        
+        <label>Эффекты:</label>
+        <div class='grid'>
+            <button class='btn-fx 
+            btn-active' id='fx0' 
+            onclick='setFx(0)'>
+                Статик
+            </button>
+            <button class='btn-fx' 
+            id='fx1' 
+            onclick='setFx(1)'>
+                Радуга
+            </button>
+            <button class='btn-fx' 
+            id='fx2' 
+            onclick='setFx(2)'>
+                Волна
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+var isRb = false;
+var rbInt = null;
+var isScooterUnlocked = false;
+
+function tryUnlock() {
+    var pin = document.getElementById('pIn').value;
+    if (pin === '1') {
+        document.getElementById('lScreen').style.display = 'none';
+        document.getElementById('cScreen').style.display = 'block';
+        isScooterUnlocked = false;
+        applyScooterState();
+    } else {
+        alert('Динаху');
+    }
+}
+
+function unlockScooter() {
+    isScooterUnlocked = true;
+    applyScooterState();
+}
+
+function lockScooter() {
+    isScooterUnlocked = false;
+    applyScooterState();
+}
+
+function applyScooterState() {
+    var stat = document.getElementById('scooterStatus');
+    if (!stat) return;
+    if (isScooterUnlocked) {
+        stat.innerText = '🔓 САМОКАТ ГОТОВ К ПОЕЗДКЕ';
+        stat.className = 'status unlocked';
+        updRGB();
+    } else {
+        stat.innerText = '🔒 САМОКАТ ЗАБЛОКИРОВАН';
+        stat.className = 'status locked';
+        isRb = false;
+        if (rbInt) clearInterval(rbInt);
+        var ds = document.querySelectorAll('.dot');
+        for (var i = 0; i < ds.length; i++) {
+            ds[i].style.backgroundColor = '#3c0066';
+            ds[i].style.opacity = '0.4';
+            ds[i].style.boxShadow = '0 0 10px #3c0066';
+        }
+    }
+}
+
+function logoutPanel() {
+    document.getElementById('cScreen').style.display = 'none';
+    document.getElementById('lScreen').style.display = 'block';
+    document.getElementById('pIn').value = '';
+    isRb = false;
+    if (rbInt) clearInterval(rbInt);
+    var ds = document.querySelectorAll('.dot');
+    for (var i = 0; i < ds.length; i++) {
+        ds[i].style.backgroundColor = '#3c0066';
+        ds[i].style.opacity = '0.4';
+        ds[i].style.boxShadow = '0 0 10px #3c0066';
+    }
+}
+
+function openDeck() {
+    var btn = document.getElementById('dBtn');
+    if (!btn) return;
+    btn.innerText = '⚡ ДЕКА ОТКРТА!';
+    btn.style.background = '#10b981';
+    btn.disabled = true;
+    setTimeout(function() {
+        btn.innerText = '🧲 ОТКРЫТЬ ДЕКУ';
+        btn.style.background = '#ff7b00';
+        btn.disabled = false;
+    }, 2500);
+}
+
+function getVal(id, def) {
+    var el = document.getElementById(id);
+    return el ? el.value : def;
+}
+
+function updRGB() {
+    if (isRb || !isScooterUnlocked) return;
+    var r = getVal('r-slip', 150);
+    var g = getVal('g-slip', 0);
+    var b = getVal('b-slip', 255);
+    var br = getVal('bRng', 70) / 100;
+    
+    var rL = document.getElementById('rLab'); if(rL) rL.innerText = 'Красный (R): ' + r;
+    var gL = document.getElementById('gLab'); if(gL) gL.innerText = 'Зеленый (G): ' + g;
+    var bL = document.getElementById('bLab'); if(bL) bL.innerText = 'Синий (B): ' + b;
+    
+    var colStr = 'rgb(' + r + ',' + g + ',' + b + ')';
+    var ind = document.getElementById('cInd');
+    if(ind) {
+        ind.style.background = colStr;
+        ind.style.boxShadow = '0 0 10px ' + colStr;
+    }
+    
+    var ds = document.querySelectorAll('.dot');
+    for (var i = 0; i < ds.length; i++) {
+        ds[i].style.backgroundColor = colStr;
+        ds[i].style.opacity = br;
+        ds[i].style.boxShadow = '0 0 12px ' + colStr;
+    }
+}
+
+function updBright() {
+    var val = getVal('bRng', 70);
+    var bL = document.getElementById('brightLab');
+    if(bL) bL.innerText = 'Общая яркость: ' + val + '%';
+    if (!isRb && isScooterUnlocked) updRGB();
+}
+
+function setFx(id) {
+    if (!isScooterUnlocked) return;
+    document.getElementById('fx0').className = 'btn-fx';
+    document.getElementById('fx1').className = 'btn-fx';
+    document.getElementById('fx2').className = 'btn-fx';
+    document.getElementById('fx' + id).className = 'btn-fx btn-active';
+    if (rbInt) clearInterval(rbInt);
+    
+    if (id === 0) {
+        isRb = false;
+        updRGB();
+    } else if (id === 1) {
+        isRb = true;
+        var hue = 0;
+        rbInt = setInterval(function() {
+            hue = (hue + 12) % 360;
+            var ds = document.querySelectorAll('.dot');
+            for (var i = 0; i < ds.length; i++) {
+                var cHue = (hue + i * 25) % 360;
+                ds[i].style.backgroundColor = 'hsl(' + cHue + ',100%,50%)';
+                ds[i].style.boxShadow = '0 0 12px hsl(' + cHue + ',100%,50%)';
+            }
+        }, 80);
+    } else if (id === 2) {
+        isRb = false;
+        var st = 0;
+        rbInt = setInterval(function() {
+            var r = getVal('r-slip', 150);
+            var g = getVal('g-slip', 0);
+            var b = getVal('b-slip', 255);
+            var br = getVal('bRng', 70) / 100;
+            var ds = document.querySelectorAll('.dot');
+            for (var i = 0; i < ds.length; i++) {
+                var wave = Math.sin((st + i) * 0.7) * 0.5 + 0.5;
+                ds[i].style.opacity = wave * br;
+                ds[i].style.backgroundColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+                ds[i].style.boxShadow = '0 0 12px rgb(' + r + ',' + g + ',' + b + ')';
+            }
+            st += 1;
+        }, 120);
+    }
+}
+lockScooter();
+    </script>
+   </body>
+  </html>
